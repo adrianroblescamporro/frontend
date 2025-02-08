@@ -16,17 +16,35 @@ const IoCsList = () => {
   return (
     <div>
       <h2>Lista de IoCs</h2>
-      <ul>
-      {iocs.length > 0 ? (
-    iocs.map(ioc => (
-      <li key={ioc.id}>{ioc.tipo}: {ioc.valor} - {ioc.estado}</li>
-    ))
-  ) : (
-    <p>No hay IoCs disponibles</p>
-  )}
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Valor</th>
+            <th>Cliente</th>
+            <th>Categoría</th>
+            <th>Incidente</th>
+            <th>Criticidad</th>
+            <th>Usuario</th>
+          </tr>
+        </thead>
+        <tbody>
+          {iocs.map((ioc) => (
+            <tr key={ioc.id}>
+              <td>{ioc.tipo}</td>
+              <td>{ioc.valor}</td>
+              <td>{ioc.cliente}</td>
+              <td>{ioc.categoria}</td>
+              <td>{ioc.pertenece_a_incidente ? "Sí" : "No"}</td>
+              <td>{ioc.criticidad}</td>
+              <td>{ioc.usuario_registro}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
+
 };
 
 export default IoCsList;
