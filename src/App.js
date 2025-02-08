@@ -1,11 +1,10 @@
 import React from "react";
-import IoCsList from "./components/IoCsList";
+import IoCManagement from "./components/IoCManagement";
 
 function App() {
   return (
     <div>
-      <h1>Gestión de IoCs</h1>
-      <IoCsList />
+      <IoCManagement />
     </div>
   );
 }
