@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { api } from "../api"; // Importar la instancia de api
+import ReactPaginate from "react-paginate";
+
 import "../App.css";
 
 function IoCManagement() {
@@ -13,6 +15,8 @@ function IoCManagement() {
     criticidad: "",
     usuario_registro: "",
   });
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 10; // Cantidad de IoCs por página
 
   useEffect(() => {
     fetchIoCs();
@@ -52,6 +56,16 @@ function IoCManagement() {
     } catch (error) {
       console.error("Error al registrar el IoC:", error);
     }
+  };
+
+  // Calcular los IoCs de la página actual
+  const offset = currentPage * itemsPerPage;
+  const currentItems = iocs.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(iocs.length / itemsPerPage);
+
+  // Función para cambiar de página
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
   };
 
   return (
@@ -108,15 +122,47 @@ function IoCManagement() {
 
       <div className="ioc-list">
         <h2>Lista de IoCs</h2>
-        {iocs.length > 0 ? (
-          iocs.map((ioc) => (
-            <div key={ioc.id} className="ioc-item">
-              <strong>{ioc.tipo} - {ioc.valor}</strong> - {ioc.cliente} - {ioc.categoria} ({ioc.criticidad}) -- {ioc.fecha_creacion}
-            </div>
-          ))
-        ) : (
-          <p>No hay IoCs registrados.</p>
-        )}
+        {/* Tabla de IoCs */}
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Valor</th>
+            <th>Cliente</th>
+            <th>Categoría</th>
+            <th>Incidente</th>
+            <th>Criticidad</th>
+            <th>Usuario</th>
+            <th>Fecha Creación</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentItems.map((ioc) => (
+            <tr key={ioc.id}>
+              <td>{ioc.tipo}</td>
+              <td>{ioc.valor}</td>
+              <td>{ioc.cliente}</td>
+              <td>{ioc.categoria}</td>
+              <td>{ioc.pertenece_a_incidente ? "Sí" : "No"}</td>
+              <td>{ioc.criticidad}</td>
+              <td>{ioc.usuario_registro}</td>
+              <td>{ioc.fecha_creacion}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+        {/* Paginación */}
+      <ReactPaginate
+        previousLabel={"← Anterior"}
+        nextLabel={"Siguiente →"}
+        breakLabel={"..."}
+        pageCount={pageCount}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={3}
+        onPageChange={handlePageChange}
+        containerClassName={"pagination"}
+        activeClassName={"active"}
+      />
       </div>
     </div>
   );
