@@ -16,6 +16,7 @@ function IoCManagement() {
     usuario_registro: "",
   });
   const [currentPage, setCurrentPage] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 10; // Cantidad de IoCs por página
 
   useEffect(() => {
@@ -58,10 +59,19 @@ function IoCManagement() {
     }
   };
 
+   // Filtrar IoCs solo si hay un término de búsqueda
+  const filteredIoCs = searchTerm
+  ? iocs.filter((ioc) =>
+      Object.values(ioc).some((value) =>
+        String(value).toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    )
+  : iocs; // Si no hay búsqueda, mostrar todos los IoCs
+
   // Calcular los IoCs de la página actual
   const offset = currentPage * itemsPerPage;
-  const currentItems = iocs.slice(offset, offset + itemsPerPage);
-  const pageCount = Math.ceil(iocs.length / itemsPerPage);
+  const currentItems = filteredIoCs.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(filteredIoCs.length / itemsPerPage);
 
   // Función para cambiar de página
   const handlePageChange = ({ selected }) => {
@@ -69,7 +79,7 @@ function IoCManagement() {
   };
 
   return (
-    <div className="container">
+    <div className="page">
       <div className="form-container">
         <h2>Registrar nuevo IoC</h2>
         <form onSubmit={handleSubmit}>
@@ -121,8 +131,22 @@ function IoCManagement() {
       </div>
 
       <div className="ioc-list">
+
+        {/* Barra de búsqueda */}
+      <input
+        type="text"
+        placeholder="Buscar IoC..."
+        value={searchTerm}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          setCurrentPage(0); // Resetear a la primera página al buscar
+        }}
+        className="search-bar"
+      />
+
         <h2>Lista de IoCs</h2>
         {/* Tabla de IoCs */}
+        {filteredIoCs.length > 0 ? (
       <table>
         <thead>
           <tr>
@@ -151,6 +175,10 @@ function IoCManagement() {
           ))}
         </tbody>
       </table>
+    ) : (
+        <p className="no-results">Elemento no encontrado</p>
+      )}
+
         {/* Paginación */}
       <ReactPaginate
         previousLabel={"← Anterior"}
