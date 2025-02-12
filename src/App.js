@@ -12,7 +12,7 @@ function App() {
       <div className="content">
       <IoCManagement />
       </div>
-      <footer className="footer">© 2025 Be:Sec Emetel SLU. Todos los derechos reservados.</footer>
+      <footer className="footer">© 2025 BE:SEC. Todos los derechos reservados.</footer>
     </div>
   );
 }

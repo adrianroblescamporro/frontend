@@ -72,6 +72,7 @@ body {
 .content {
   margin-top: 50px; /* Ajustar según la altura de la barra */
   padding: 20px;
+  padding-bottom: 3px;
 }
 
 

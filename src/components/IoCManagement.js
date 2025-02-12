@@ -17,7 +17,7 @@ function IoCManagement() {
   });
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
-  const itemsPerPage = 10; // Cantidad de IoCs por página
+  const itemsPerPage = 8; // Cantidad de IoCs por página
 
   useEffect(() => {
     fetchIoCs();
@@ -34,9 +34,20 @@ function IoCManagement() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
+    const newValue = type === "checkbox" ? checked : value;
+
+    // Actualizar el estado del formulario
+    setFormData((prev) => {
+      const updatedData = { ...prev, [name]: newValue };
+
+      // Si cambia la categoría o si pertenece a un incidente, recalcular criticidad
+      if (name === "categoria" || name === "pertenece_a_incidente") {
+        updatedData.criticidad = calcularCriticidad(
+          updatedData.categoria,
+          updatedData.pertenece_a_incidente
+        );
+      }
+      return updatedData;
     });
   };
 
@@ -73,10 +84,26 @@ function IoCManagement() {
   const currentItems = filteredIoCs.slice(offset, offset + itemsPerPage);
   const pageCount = Math.ceil(filteredIoCs.length / itemsPerPage);
 
+  // Función para calcular la criticidad (en base a categoria y pertenencia a incidente)
+  const calcularCriticidad = (categoria, pertenece_a_incidente) => {
+    if (pertenece_a_incidente) {
+      return "Alta";
+    }
+    if (categoria === "Ransomware" || categoria === "Malware") {
+      return "Alta";
+    }
+    if (categoria === "Phishing") {
+      return "Media";
+    }
+    return "Baja";
+  };
+
   // Función para cambiar de página
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
   };
+
+  
 
   return (
     <div className="page">
