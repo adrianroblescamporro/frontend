@@ -197,7 +197,13 @@ function IoCManagement() {
               <td>{ioc.pertenece_a_incidente ? "Sí" : "No"}</td>
               <td>{ioc.criticidad}</td>
               <td>{ioc.usuario_registro}</td>
-              <td>{ioc.fecha_creacion}</td>
+              <td>{new Date(ioc.fecha_creacion).toLocaleString("es-ES", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+              })}</td>
             </tr>
           ))}
         </tbody>
