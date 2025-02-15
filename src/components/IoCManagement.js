@@ -34,14 +34,22 @@ function IoCManagement() {
     }
   };
 
+  const validateValor = (valor) => {
+    // Permite solo caracteres alfanuméricos, puntos, barras y guiones en URLs/IPs/Dominios
+    const regex = /^[a-zA-Z0-9._\-/:]+$/;
+    return regex.test(valor);
+  };
+  
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    let newValue;
-  
-    if (type === "checkbox") {
-      newValue = checked;
-    } else {
-      newValue = value;
+    let newValue = type === "checkbox" ? checked : value;
+
+    // Si el campo modificado es "valor", validar antes de actualizar
+    if (name === "valor") {
+      if (!validateValor(newValue)) {
+        alert("El campo 'valor' contiene caracteres no permitidos.");
+        return; // No actualiza el estado si la validación falla
+      }
     }
   
     // Actualizar el estado del formulario
@@ -176,7 +184,7 @@ function IoCManagement() {
           <label>Usuario que registra:</label>
           <input type="text" name="usuario_registro" value={formData.usuario_registro} onChange={handleChange} required />
 
-          <label>Fecha de Creación:</label>
+          <label>Fecha de Detección:</label>
           <input
             type="datetime-local"
             name="fecha_creacion"
