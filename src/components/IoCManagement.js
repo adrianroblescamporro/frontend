@@ -18,7 +18,6 @@ function IoCManagement() {
     fecha_creacion: "",
   });
   const [currentPage, setCurrentPage] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 8; // Cantidad de IoCs por página
 
   useEffect(() => {
@@ -89,14 +88,27 @@ function IoCManagement() {
     }
   };
 
+  const [filters, setFilters] = useState({
+    tipo: "",
+    cliente: "",
+    categoria: "",
+    pertenece_a_incidente: "",
+    criticidad: "",
+  });
+  
    // Filtrar IoCs solo si hay un término de búsqueda
-  const filteredIoCs = searchTerm
-  ? iocs.filter((ioc) =>
-      Object.values(ioc).some((value) =>
-        String(value).toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    )
-  : iocs; // Si no hay búsqueda, mostrar todos los IoCs
+  const filteredIoCs = iocs.filter((ioc) => {
+  const sinFiltros = Object.values(filters).every((value) => value === "" || value === false);
+  
+  return sinFiltros || (
+    (filters.tipo === "" || ioc.tipo === filters.tipo) &&
+    (filters.cliente === "" || ioc.cliente === filters.cliente) &&
+    (filters.categoria === "" || ioc.categoria === filters.categoria) &&
+    (filters.criticidad === "" || ioc.criticidad === filters.criticidad) &&
+    (filters.pertenece_a_incidente === "" || ioc.pertenece_a_incidente === filters.pertenece_a_incidente)
+  );
+  });
+  
 
   // Calcular los IoCs de la página actual
   const offset = currentPage * itemsPerPage;
@@ -201,16 +213,65 @@ function IoCManagement() {
       <div className="ioc-list">
 
         {/* Barra de búsqueda */}
-      <input
-        type="text"
-        placeholder="Buscar IoC..."
-        value={searchTerm}
-        onChange={(e) => {
-          setSearchTerm(e.target.value);
-          setCurrentPage(0); // Resetear a la primera página al buscar
-        }}
-        className="search-bar"
-      />
+        <div className="filters">
+          <label>Tipo:</label>
+          <select
+            name="tipo"
+            value={filters.tipo}
+            onChange={(e) => setFilters({ ...filters, tipo: e.target.value })}
+          >
+            <option value="">Todos</option>
+            <option value="IP">IP</option>
+            <option value="Dominio">Dominio</option>
+            <option value="URL">URL</option>
+            <option value="Hash">Hash</option>
+          </select>
+
+          <label>Cliente:</label>
+          <select
+            name="cliente"
+            value={filters.cliente}
+            onChange={(e) => setFilters({ ...filters, cliente: e.target.value })}
+          >
+            <option value="">Todos</option>
+            <option value="Empresa A">Empresa A</option>
+            <option value="Empresa B">Empresa B</option>
+            <option value="Empresa C">Empresa C</option>
+          </select>
+
+          <label>Categoría:</label>
+          <select
+            name="categoria"
+            value={filters.categoria}
+            onChange={(e) => setFilters({ ...filters, categoria: e.target.value })}
+          >
+            <option value="">Todas</option>
+            <option value="Phishing">Phishing</option>
+            <option value="Ransomware">Ransomware</option>
+            <option value="Malware">Malware</option>
+          </select>
+
+          <label>Pertenece a un Incidente:</label>
+          <input
+            type="checkbox"
+            checked={filters.pertenece_a_incidente}
+            onChange={(e) => setFilters({ ...filters, pertenece_a_incidente: e.target.checked })}
+          />
+
+          <label>Criticidad:</label>
+          <select
+            name="criticidad"
+            value={filters.criticidad}
+            onChange={(e) => setFilters({ ...filters, criticidad: e.target.value })}
+          >
+            <option value="">Todas</option>
+            <option value="Baja">Baja</option>
+            <option value="Media">Media</option>
+            <option value="Alta">Alta</option>
+            <option value="Crítica">Crítica</option>
+          </select>
+        </div>
+
 
         <h2>Lista de IoCs</h2>
         {/* Tabla de IoCs */}
