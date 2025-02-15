@@ -11,9 +11,11 @@ function IoCManagement() {
     valor: "",
     cliente: "",
     categoria: "",
+    tecnologia_deteccion: "",
     pertenece_a_incidente: false,
     criticidad: "",
     usuario_registro: "",
+    fecha_creacion: "",
   });
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,12 +36,18 @@ function IoCManagement() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const newValue = type === "checkbox" ? checked : value;
-
+    let newValue;
+  
+    if (type === "checkbox") {
+      newValue = checked;
+    } else {
+      newValue = value;
+    }
+  
     // Actualizar el estado del formulario
     setFormData((prev) => {
       const updatedData = { ...prev, [name]: newValue };
-
+  
       // Si cambia la categoría o si pertenece a un incidente, recalcular criticidad
       if (name === "categoria" || name === "pertenece_a_incidente") {
         updatedData.criticidad = calcularCriticidad(
@@ -47,10 +55,11 @@ function IoCManagement() {
           updatedData.pertenece_a_incidente
         );
       }
+  
       return updatedData;
     });
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -61,9 +70,11 @@ function IoCManagement() {
         valor: "",
         cliente: "",
         categoria: "",
+        tecnologia_deteccion: "",
         pertenece_a_incidente: false,
         criticidad: "",
         usuario_registro: "",
+        fecha_creacion: "",
       });
     } catch (error) {
       console.error("Error al registrar el IoC:", error);
@@ -87,10 +98,10 @@ function IoCManagement() {
   // Función para calcular la criticidad (en base a categoria y pertenencia a incidente)
   const calcularCriticidad = (categoria, pertenece_a_incidente) => {
     if (pertenece_a_incidente) {
-      return "Alta";
+      return "Crítica";
     }
     if (categoria === "Ransomware" || categoria === "Malware") {
-      return "Alta";
+      return "Crítica";
     }
     if (categoria === "Phishing") {
       return "Media";
@@ -137,6 +148,17 @@ function IoCManagement() {
             <option value="Phishing">Phishing</option>
             <option value="Ransomware">Ransomware</option>
             <option value="Malware">Malware</option>
+            <option value="Otro">Otro</option>
+          </select>
+
+          <label>Tecnología Detección:</label>
+          <select name="tecnologia_deteccion" value={formData.tecnologia_deteccion} onChange={handleChange} required>
+            <option value="">Seleccione...</option>
+            <option value="NDR">NDR</option>
+            <option value="SIEM">SIEM</option>
+            <option value="XDR">XDR</option>
+            <option value="Correo">Correo</option>
+            <option value="Otros">Otros</option>
           </select>
 
           <label>Pertenece a un incidente:</label>
@@ -148,10 +170,21 @@ function IoCManagement() {
             <option value="Baja">Baja</option>
             <option value="Media">Media</option>
             <option value="Alta">Alta</option>
+            <option value="Crítica">Crítica</option>
           </select>
 
           <label>Usuario que registra:</label>
           <input type="text" name="usuario_registro" value={formData.usuario_registro} onChange={handleChange} required />
+
+          <label>Fecha de Creación:</label>
+          <input
+            type="datetime-local"
+            name="fecha_creacion"
+            value={formData.fecha_creacion}
+            onChange={handleChange}
+            required
+          />
+
 
           <button type="submit">Registrar IoC</button>
         </form>
@@ -181,10 +214,11 @@ function IoCManagement() {
             <th>Valor</th>
             <th>Cliente</th>
             <th>Categoría</th>
+            <th>Tecnología</th>
             <th>Incidente</th>
             <th>Criticidad</th>
             <th>Usuario</th>
-            <th>Fecha Creación</th>
+            <th>Fecha Detección</th>
           </tr>
         </thead>
         <tbody>
@@ -194,6 +228,7 @@ function IoCManagement() {
               <td>{ioc.valor}</td>
               <td>{ioc.cliente}</td>
               <td>{ioc.categoria}</td>
+              <td>{ioc.tecnologia_deteccion}</td>
               <td>{ioc.pertenece_a_incidente ? "Sí" : "No"}</td>
               <td>{ioc.criticidad}</td>
               <td>{ioc.usuario_registro}</td>
@@ -209,7 +244,7 @@ function IoCManagement() {
         </tbody>
       </table>
     ) : (
-        <p className="no-results">Elemento no encontrado</p>
+        <p className="no-results">Elementos no encontrados</p>
       )}
 
         {/* Paginación */}
