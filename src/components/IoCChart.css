@@ -1,0 +1,24 @@
+/* Variables de color extraídas del logo de Be-Sec */
+:root {
+    --primary-color: #003366;  /* Azul oscuro */
+    --secondary-color: #00509E; /* Azul intermedio */
+    --accent-color: #00AEEF; /* Azul claro */
+    --background-color: #F5F7FA; /* Fondo claro */
+    --text-color: #333333; /* Texto principal */
+    --white: #FFFFFF;
+  }
+
+.chart-container {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: var(--primary-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  .chart-container h3 {
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  

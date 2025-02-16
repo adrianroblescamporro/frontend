@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { api } from "../api"; // Importar la instancia de api
 import ReactPaginate from "react-paginate";
+import IoCChart from "./IoCChart";
 
 import "../App.css";
 
@@ -104,8 +105,10 @@ function IoCManagement() {
     (filters.tipo === "" || ioc.tipo === filters.tipo) &&
     (filters.cliente === "" || ioc.cliente === filters.cliente) &&
     (filters.categoria === "" || ioc.categoria === filters.categoria) &&
+    (filters.tecnologia_deteccion === "" || ioc.tecnologia_deteccion === filters.tecnologia_deteccion) &&
     (filters.criticidad === "" || ioc.criticidad === filters.criticidad) &&
-    (filters.pertenece_a_incidente === "" || ioc.pertenece_a_incidente === filters.pertenece_a_incidente)
+    (filters.pertenece_a_incidente === "" || ioc.pertenece_a_incidente === filters.pertenece_a_incidente) &&
+    (filters.valor === "" || ioc.valor.toLowerCase().includes(filters.valor.toLowerCase())) // Buscar por valor
   );
   });
   
@@ -214,7 +217,18 @@ function IoCManagement() {
 
         {/* Barra de búsqueda */}
         <div className="filters">
-          <label>Tipo:</label>
+        <div className="filter-group">
+          <label>Valor</label>
+          <input
+            type="text"
+            placeholder="Buscar por valor..."
+            value={filters.valor}
+            onChange={(e) => setFilters({ ...filters, valor: e.target.value })}
+          />
+        </div>
+
+        <div className="filter-group">
+          <label>Tipo</label>
           <select
             name="tipo"
             value={filters.tipo}
@@ -226,8 +240,10 @@ function IoCManagement() {
             <option value="URL">URL</option>
             <option value="Hash">Hash</option>
           </select>
+        </div>
 
-          <label>Cliente:</label>
+        <div className="filter-group">
+          <label>Cliente</label>
           <select
             name="cliente"
             value={filters.cliente}
@@ -238,8 +254,10 @@ function IoCManagement() {
             <option value="Empresa B">Empresa B</option>
             <option value="Empresa C">Empresa C</option>
           </select>
+        </div>
 
-          <label>Categoría:</label>
+        <div className="filter-group">
+          <label>Categoría</label>
           <select
             name="categoria"
             value={filters.categoria}
@@ -250,15 +268,35 @@ function IoCManagement() {
             <option value="Ransomware">Ransomware</option>
             <option value="Malware">Malware</option>
           </select>
+        </div>
 
-          <label>Pertenece a un Incidente:</label>
+        <div className="filter-group">
+          <label>Tecnología</label>
+          <select
+            name="tecnologia_deteccion"
+            value={filters.tecnologia_deteccion}
+            onChange={(e) => setFilters({ ...filters, tecnologia_deteccion: e.target.value })}
+          >
+            <option value="">Todas</option>
+            <option value="NDR">NDR</option>
+            <option value="SIEM">SIEM</option>
+            <option value="XDR">XDR</option>
+            <option value="Correo">Correo</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
+
+        <div className="filter-group">
+          <label>Pertenece a un Incidente</label>
           <input
             type="checkbox"
             checked={filters.pertenece_a_incidente}
             onChange={(e) => setFilters({ ...filters, pertenece_a_incidente: e.target.checked })}
           />
+        </div>
 
-          <label>Criticidad:</label>
+        <div className="filter-group">
+          <label>Criticidad</label>
           <select
             name="criticidad"
             value={filters.criticidad}
@@ -270,6 +308,7 @@ function IoCManagement() {
             <option value="Alta">Alta</option>
             <option value="Crítica">Crítica</option>
           </select>
+        </div>
         </div>
 
 
@@ -328,7 +367,10 @@ function IoCManagement() {
         containerClassName={"pagination"}
         activeClassName={"active"}
       />
+      <IoCChart iocList={iocs} />
+
       </div>
+
     </div>
   );
 }

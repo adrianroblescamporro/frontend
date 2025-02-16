@@ -160,7 +160,7 @@ button:hover {
   text-align: center;
   font-size: 16px;
   font-weight: bold;
-  color: red;
+  color: #faca08;
   margin-top: 20px;
 }
 
@@ -219,3 +219,64 @@ th, td {
   background-color: #004b8d; /* Color principal de Be-Sec */
   color: white;
 }
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Cuatro columnas en la primera fila */
+  gap: 15px;
+  background-color: var(--primary-color); /* Azul oscuro Be-Sec */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  align-items: center;
+}
+
+/* Estilos generales para los grupos de filtros */
+.filter-group {
+  margin-top: 1px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos para los inputs y selects */
+.filters input[type="text"],
+.filters select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: #ffffff;
+  color: #162a4f;
+  width: 80%;
+}
+
+/* Checkbox */
+.filters input[type="checkbox"] {
+  transform: scale(1.2);
+  margin-left: 10px;
+}
+
+/* Etiquetas */
+.filters label {
+  font-weight: bold;
+  color: var(--white); /* Amarillo Be-Sec */
+  margin-bottom: 5px;
+}
+
+/* Efectos en focus */
+.filters select:focus,
+.filters input:focus {
+  border-color: var(--white);
+  outline: none;
+  box-shadow: 0 0 5px rgba(250, 202, 8, 0.8);
+}
+
+/* Segunda fila con solo tres elementos */
+.filters .second-row {
+  grid-column: span 4; /* Ocupa las 4 columnas */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 50px;
+  margin-top: 10px;
+}
+
