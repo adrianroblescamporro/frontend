@@ -1,33 +1,63 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
-import { useMemo } from "react";
-import "./IoCChart.css";
+import React, { useEffect, useState } from "react";
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
+import axios from "axios";
 
-// Función para agrupar IoCs por fecha
-const agruparIoCsPorFecha = (iocList) => {
-  const conteoPorFecha = iocList.reduce((acc, ioc) => {
-    const fecha = new Date(ioc.fecha_creacion).toISOString().split("T")[0]; // YYYY-MM-DD
-    acc[fecha] = (acc[fecha] || 0) + 1;
-    return acc;
-  }, {});
+const IoCChart = () => {
+  const [chartData, setChartData] = useState([]);
 
-  return Object.entries(conteoPorFecha).map(([fecha, cantidad]) => ({ fecha, cantidad }));
-};
+  // Función para obtener datos actualizados
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/iocs"); // Ajusta la URL de tu API
+      const iocs = response.data;
 
-const IoCChart = ({ iocList }) => {
-  // Memoizar los datos para mejorar el rendimiento
-  const data = useMemo(() => agruparIoCsPorFecha(iocList), [iocList]);
+      // Obtener los últimos 7 días en orden cronológico
+      const last7Days = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - (6 - i)); // Asegura orden correcto
+        return date.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+      });
+
+      // Contar IoCs por día y asegurar que los días sin registros tengan un valor de 0
+      const counts = last7Days.map(date => ({
+        date,
+        count: iocs.filter(ioc => ioc.fecha_creacion.startsWith(date)).length,
+      }));
+
+      setChartData(counts);
+    } catch (error) {
+      console.error("Error cargando datos para la gráfica:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(); // Cargar datos al montar el componente
+
+    // Actualizar datos cada 10 segundos
+    const interval = setInterval(fetchData, 10000);
+
+    return () => clearInterval(interval); // Limpiar intervalo al desmontar el componente
+  }, []);
 
   return (
     <div className="chart-container">
-      <h3>IoCs añadidos por día</h3>
+      <h3>IoCs Registrados</h3>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data}>
+        <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="fecha" stroke="#FFFFFF" />
-          <YAxis stroke="#FFFFFF"/>
+          <XAxis
+            dataKey="date"
+            stroke="#333"
+            tickFormatter={(date) => date.split("-").reverse().join("/")} // Formato DD/MM
+          />
+          <YAxis
+            stroke="#333"
+            allowDecimals={false} // Solo valores enteros
+            tickFormatter={(num) => `${num}`} // Formato número entero
+          />
           <Tooltip />
-          <Bar dataKey="cantidad" fill="#FFFFFF" />
-        </BarChart>
+          <Line type="monotone" dataKey="count" stroke="#00AEEF" strokeWidth={2} />
+        </LineChart>
       </ResponsiveContainer>
     </div>
   );

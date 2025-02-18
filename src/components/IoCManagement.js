@@ -68,8 +68,11 @@ function IoCManagement() {
     });
   };
   
+  const [errorMessage, setErrorMessage] = useState(""); // ← Estado para manejar el error
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage(""); // Resetear error antes de hacer la petición
     try {
       await api.post("/iocs", formData);
       fetchIoCs();
@@ -85,14 +88,20 @@ function IoCManagement() {
         fecha_creacion: "",
       });
     } catch (error) {
-      console.error("Error al registrar el IoC:", error);
+      if (error.response && error.response.status === 400) {
+        setErrorMessage("Error: El IoC ya existe en la base de datos.");
+      } else {
+        setErrorMessage("Error al registrar el IoC.");
+      }
     }
   };
 
   const [filters, setFilters] = useState({
     tipo: "",
+    valor:"",
     cliente: "",
     categoria: "",
+    tecnologia_deteccion: "",
     pertenece_a_incidente: "",
     criticidad: "",
   });
@@ -211,6 +220,8 @@ function IoCManagement() {
 
           <button type="submit">Registrar IoC</button>
         </form>
+        {/* Mensaje de error */}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
 
       <div className="ioc-list">
