@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { api } from "../api"; // Importar la instancia de api
 import ReactPaginate from "react-paginate";
 import IoCChart from "./IoCChart";
+import ReportGenerator from "./ReportGenerator";
+
 
 import "../App.css";
 
@@ -222,6 +224,12 @@ function IoCManagement() {
         </form>
         {/* Mensaje de error */}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+        <div className="report-section">
+        <h2>Generar Reporte</h2>
+        <ReportGenerator />
+        </div>
+
       </div>
 
       <div className="ioc-list">
