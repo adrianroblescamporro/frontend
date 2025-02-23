@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { api } from "../api";
+import "./ReportGenerator.css"
 
 const ReportGenerator = () => {
   const [startDate, setStartDate] = useState("");
@@ -27,22 +28,26 @@ const ReportGenerator = () => {
   };
 
   return (
-    <div className="report-generator">
-      <h3>Generar Reporte de IoCs</h3>
+    <div className="report">
+      <div className="report-group">
       <label>Fecha de inicio:</label>
       <input
         type="date"
         value={startDate}
         onChange={(e) => setStartDate(e.target.value)}
       />
+      </div>
 
+      <div className="report-group">
       <label>Fecha de fin:</label>
       <input
         type="date"
         value={endDate}
         onChange={(e) => setEndDate(e.target.value)}
       />
+      </div>
 
+      <div className="report-group">
       <label>Cliente:</label>
       <select value={clientes} onChange={(e) => setCliente(e.target.value)}>
         <option value="">Todos</option>
@@ -51,6 +56,7 @@ const ReportGenerator = () => {
         <option value="Empresa C">Empresa C</option>
         <option value="Empresa D">Empresa D</option>
       </select>
+      </div>
 
       <button onClick={handleDownloadReport}>Descargar Reporte</button>
     </div>

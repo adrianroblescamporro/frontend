@@ -266,7 +266,7 @@ th, td {
 /* Etiquetas */
 .filters label {
   font-weight: bold;
-  color: var(--white); /* Amarillo Be-Sec */
+  color: var(--white); 
   margin-bottom: 5px;
 }
 
@@ -286,4 +286,3 @@ th, td {
   gap: 50px;
   margin-top: 10px;
 }
-
