@@ -22,15 +22,30 @@ function IoCManagement() {
   });
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 8; // Cantidad de IoCs por página
+  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     fetchIoCs();
-  }, []);
+  });
 
   const fetchIoCs = async () => {
     try {
       const response = await api.get("/iocs");
       setIocs(response.data);
+
+      // Obtener los últimos 7 días en orden cronológico
+      const last7Days = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - (6 - i)); // Asegura orden correcto
+        return date.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+      });
+
+      // Contar IoCs por día y asegurar que los días sin registros tengan un valor de 0
+      const counts = last7Days.map(date => ({
+        date,
+        count: iocs.filter(ioc => ioc.fecha_creacion.startsWith(date)).length,
+      }));
+      setChartData(counts);
     } catch (error) {
       console.error("Error cargando IoCs:", error);
     }
@@ -89,6 +104,20 @@ function IoCManagement() {
         usuario_registro: "",
         fecha_creacion: "",
       });
+
+      // Obtener los últimos 7 días en orden cronológico
+      const last7Days = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - (6 - i)); // Asegura orden correcto
+        return date.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+      });
+
+      // Contar IoCs por día y asegurar que los días sin registros tengan un valor de 0
+      const counts = last7Days.map(date => ({
+        date,
+        count: iocs.filter(ioc => ioc.fecha_creacion.startsWith(date)).length,
+      }));
+      setChartData(counts);
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setErrorMessage("Error: El IoC ya existe en la base de datos.");
@@ -386,7 +415,7 @@ function IoCManagement() {
         containerClassName={"pagination"}
         activeClassName={"active"}
       />
-      <IoCChart iocList={iocs} />
+      <IoCChart chartData={chartData} />
 
       </div>
 
