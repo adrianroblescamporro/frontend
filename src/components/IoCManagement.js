@@ -320,15 +320,6 @@ function IoCManagement() {
         </div>
 
         <div className="filter-group">
-          <label>Pertenece a un Incidente</label>
-          <input
-            type="checkbox"
-            checked={filters.pertenece_a_incidente}
-            onChange={(e) => setFilters({ ...filters, pertenece_a_incidente: e.target.checked })}
-          />
-        </div>
-
-        <div className="filter-group">
           <label>Criticidad</label>
           <select
             name="criticidad"
@@ -341,6 +332,15 @@ function IoCManagement() {
             <option value="Alta">Alta</option>
             <option value="Crítica">Crítica</option>
           </select>
+        </div>
+
+        <div className="filter-group">
+          <label>Pertenece a un Incidente</label>
+          <input
+            type="checkbox"
+            checked={filters.pertenece_a_incidente}
+            onChange={(e) => setFilters({ ...filters, pertenece_a_incidente: e.target.checked })}
+          />
         </div>
         </div>
 
