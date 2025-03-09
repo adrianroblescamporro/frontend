@@ -3,6 +3,7 @@ import { api } from "../api"; // Importar la instancia de api
 import ReactPaginate from "react-paginate";
 import IoCChart from "./IoCChart";
 import ReportGenerator from "./ReportGenerator";
+import jwtDecode from "jwt-decode";
 
 
 import "../App.css";
@@ -23,6 +24,20 @@ function IoCManagement() {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 8; // Cantidad de IoCs por página
   const [chartData, setChartData] = useState([]);
+
+   // Función para obtener el usuario del token
+   const getUsernameFromToken = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token); // Decodifica el JWT
+        return decoded.sub; // "sub" es el claim que contiene el username
+      } catch (error) {
+        console.error("Error al decodificar el token:", error);
+      }
+    }
+    return null;
+  };
 
   const fetchIoCs = useCallback(async () => {
     try {

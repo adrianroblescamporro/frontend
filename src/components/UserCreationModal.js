@@ -6,6 +6,18 @@ const UserCreationModal = ({ onClose }) => {
   const [formData, setFormData] = useState({ username: "", password: "", role: "analista" });
   const [error, setError] = useState("");
 
+  // Validar usuario (entre 4 y 20 caracteres, solo letras, números y "_")
+  const validateUsername = (username) => {
+    const usernameRegex = /^[a-zA-Z0-9_]{4,20}$/;
+    return usernameRegex.test(username);
+  };
+
+  // Validar contraseña (mínimo 8 caracteres, al menos una mayúscula, una minúscula, un número y un símbolo)
+  const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    return passwordRegex.test(password);
+  };
+
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -13,6 +25,17 @@ const UserCreationModal = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    // Validar usuario y contraseña antes de enviar la solicitud
+    if (!validateUsername(formData.username)) {
+      setError("El nombre de usuario debe tener entre 4 y 20 caracteres y solo puede contener letras, números y '_'.");
+      return;
+    }
+    if (!validatePassword(formData.password)) {
+      setError("La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.");
+      return;
+    }
+    
     try {
       await axios.post("http://127.0.0.1:8000/api/register", formData);
       alert("Usuario creado exitosamente");

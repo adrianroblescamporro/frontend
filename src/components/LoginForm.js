@@ -7,6 +7,18 @@ const LoginForm = ({ onLogin }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Validar usuario (entre 4 y 20 caracteres, solo letras, números y "_")
+  const validateUsername = (username) => {
+    const usernameRegex = /^[a-zA-Z0-9_]{4,20}$/;
+    return usernameRegex.test(username);
+  };
+
+  // Validar contraseña (mínimo 8 caracteres, al menos una mayúscula, una minúscula, un número y un símbolo)
+  const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    return passwordRegex.test(password);
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -16,8 +28,26 @@ const LoginForm = ({ onLogin }) => {
     setIsLoading(true);
     setError("");
 
+    // Validar usuario y contraseña antes de enviar la solicitud
+    if (!validateUsername(formData.username)) {
+      setError("El nombre de usuario debe tener entre 4 y 20 caracteres y solo puede contener letras, números y '_'.");
+      return;
+    }
+    if (!validatePassword(formData.password)) {
+      setError("La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.");
+      return;
+    }
+    
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/login", formData);
+      // Convertir los datos a `application/x-www-form-urlencoded`
+      const formDataEncoded = new URLSearchParams();
+      formDataEncoded.append("username", formData.username);
+      formDataEncoded.append("password", formData.password);
+
+      const response = await axios.post("http://127.0.0.1:8000/api/login", formDataEncoded, {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      });
+
       localStorage.setItem("token", response.data.access_token);
       onLogin(); // Notificar al componente padre que el usuario ha iniciado sesión
     } catch (err) {
