@@ -3,30 +3,16 @@ import { api } from "../api"; // Importar la instancia de api
 import ReactPaginate from "react-paginate";
 import IoCChart from "./IoCChart";
 import ReportGenerator from "./ReportGenerator";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 
 import "../App.css";
 
 function IoCManagement() {
   const [iocs, setIocs] = useState([]);
-  const [formData, setFormData] = useState({
-    tipo: "",
-    valor: "",
-    cliente: "",
-    categoria: "",
-    tecnologia_deteccion: "",
-    pertenece_a_incidente: false,
-    criticidad: "",
-    usuario_registro: "",
-    fecha_creacion: "",
-  });
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 8; // Cantidad de IoCs por página
-  const [chartData, setChartData] = useState([]);
 
-   // Función para obtener el usuario del token
-   const getUsernameFromToken = () => {
+  // Función para obtener el usuario del token
+  const getUsernameFromToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
@@ -38,6 +24,21 @@ function IoCManagement() {
     }
     return null;
   };
+
+  const [formData, setFormData] = useState({
+    tipo: "",
+    valor: "",
+    cliente: "",
+    categoria: "",
+    tecnologia_deteccion: "",
+    pertenece_a_incidente: false,
+    criticidad: "",
+    usuario_registro: getUsernameFromToken(),
+    fecha_creacion: "",
+  });
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 8; // Cantidad de IoCs por página
+  const [chartData, setChartData] = useState([]);
 
   const fetchIoCs = useCallback(async () => {
     try {
@@ -115,7 +116,7 @@ function IoCManagement() {
         tecnologia_deteccion: "",
         pertenece_a_incidente: false,
         criticidad: "",
-        usuario_registro: "",
+        usuario_registro: getUsernameFromToken(),
         fecha_creacion: "",
       });
     } catch (error) {
@@ -235,9 +236,6 @@ function IoCManagement() {
             <option value="Alta">Alta</option>
             <option value="Crítica">Crítica</option>
           </select>
-
-          <label>Usuario que registra:</label>
-          <input type="text" name="usuario_registro" value={formData.usuario_registro} onChange={handleChange} required />
 
           <label>Fecha de Detección:</label>
           <input
