@@ -12,19 +12,20 @@ function IoCManagement() {
   const [iocs, setIocs] = useState([]);
 
   // Función para obtener el usuario del token
-  const getUsernameFromToken = () => {
+  const getUserDataFromToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decoded = jwtDecode(token); // Decodifica el JWT
-        return decoded.sub; // "sub" es el claim que contiene el username
+        return [decoded.sub, decoded.role]; // "sub" es el claim que contiene el username y "role" el que contiene el rol
       } catch (error) {
         console.error("Error al decodificar el token:", error);
       }
     }
-    return null;
+    return [null,null];
   };
 
+  const [user,role] = getUserDataFromToken();
   const [formData, setFormData] = useState({
     tipo: "",
     valor: "",
@@ -33,7 +34,7 @@ function IoCManagement() {
     tecnologia_deteccion: "",
     pertenece_a_incidente: false,
     criticidad: "",
-    usuario_registro: getUsernameFromToken(),
+    usuario_registro: user,
     fecha_creacion: "",
   });
   const [currentPage, setCurrentPage] = useState(0);
@@ -106,7 +107,8 @@ function IoCManagement() {
     e.preventDefault();
     setErrorMessage(""); // Resetear error antes de hacer la petición
     try {
-      await api.post("/iocs", formData);
+      if (role ==="analista" || role === "admin"){
+        await api.post("/iocs", formData);
       fetchIoCs();
       setFormData({
         tipo: "",
@@ -116,9 +118,13 @@ function IoCManagement() {
         tecnologia_deteccion: "",
         pertenece_a_incidente: false,
         criticidad: "",
-        usuario_registro: getUsernameFromToken(),
+        usuario_registro: user,
         fecha_creacion: "",
       });
+      }
+      else {
+        setErrorMessage("Error: No tiene permisos para esta acción")
+      }
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setErrorMessage("Error: El IoC ya existe en la base de datos.");
