@@ -20,6 +20,7 @@ body {
 /* Contenedor principal */
 .container {
   /*max-width: 1000px;*/
+  width: auto;
   margin: 10px auto;
   padding: 10px;
   background: var(--white);
@@ -57,6 +58,7 @@ body {
 
 .page {
   /*max-width: 1000px;*/
+  width: auto;
   margin: 10px auto;
   padding: 10px;
   background: var(--white);
@@ -70,6 +72,7 @@ body {
 
 /* Ajustar el contenido para que no quede debajo de la barra */
 .content {
+  width: auto;
   margin-top: 50px; /* Ajustar según la altura de la barra */
   padding: 20px;
   padding-bottom: 3px;
@@ -98,7 +101,7 @@ body {
 /* Formulario */
 .form-container {
   flex: 1;
-  width: 500px;
+  width: 400px;
   background: var(--white);
   padding: 20px;
   border-radius: 8px;
@@ -153,6 +156,7 @@ button:hover {
 
 /* Lista de IoCs */
 .ioc-list {
+  width: auto;
   margin-top: 30px;
   flex: 2;
 
@@ -201,7 +205,7 @@ button:hover {
 
 /* Tabla */
 table {
-  width: 100%;
+  width: auto;
   border-collapse: collapse;
 }
 

@@ -1,6 +1,6 @@
 .report {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Cuatro columnas en la primera fila */
+    grid-template-columns: repeat(2, 1fr); /* Cuatro columnas en la primera fila */
     gap: 15px;
     background-color: var(--primary-color); /* Azul oscuro Be-Sec */
     padding: 20px;
@@ -11,6 +11,7 @@
 
 /* Estilos generales para los grupos de filtros */
 .report-group {
+width: auto;
 margin-top: 1px;
 display: flex;
 flex-direction: column;

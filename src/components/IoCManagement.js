@@ -134,6 +134,31 @@ function IoCManagement() {
     }
   };
 
+  const [editingIoCId, setEditingIoCId] = useState(null);
+  const [editedIoC, setEditedIoC] = useState({});
+
+  // Manejar cambios en los inputs de edición
+  const handleEditChange = (e, field) => {
+    setEditedIoC({ ...editedIoC, [field]: e.target.value });
+  };
+
+  // Activar modo edición con los valores actuales
+  const handleEditClick = (ioc) => {
+    setEditingIoCId(ioc.id);
+    setEditedIoC({ ...ioc });
+  };
+
+  // Guardar cambios en la API
+  const handleSave = async (iocId) => {
+    try {
+      await api.put(`/iocs/${iocId}`, editedIoC);
+      setEditingIoCId(null);
+      fetchIoCs(); // Recargar datos actualizados
+    } catch (error) {
+      console.error("Error al actualizar IoC:", error);
+    }
+  };
+  
   const [filters, setFilters] = useState({
     tipo: "",
     valor:"",
@@ -365,44 +390,121 @@ function IoCManagement() {
 
 
         <h2>Lista de IoCs</h2>
-        {/* Tabla de IoCs */}
         {filteredIoCs.length > 0 ? (
-      <table>
-        <thead>
-          <tr>
-            <th>Tipo</th>
-            <th>Valor</th>
-            <th>Cliente</th>
-            <th>Categoría</th>
-            <th>Tecnología</th>
-            <th>Incidente</th>
-            <th>Criticidad</th>
-            <th>Usuario</th>
-            <th>Fecha Detección</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentItems.map((ioc) => (
-            <tr key={ioc.id}>
-              <td>{ioc.tipo}</td>
-              <td>{ioc.valor}</td>
-              <td>{ioc.cliente}</td>
-              <td>{ioc.categoria}</td>
-              <td>{ioc.tecnologia_deteccion}</td>
-              <td>{ioc.pertenece_a_incidente ? "Sí" : "No"}</td>
-              <td>{ioc.criticidad}</td>
-              <td>{ioc.usuario_registro}</td>
-              <td>{new Date(ioc.fecha_creacion).toLocaleString("es-ES", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit"
-              })}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+          <table>
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Valor</th>
+                <th>Cliente</th>
+                <th>Categoría</th>
+                <th>Tecnología</th>
+                <th>Incidente</th>
+                <th>Criticidad</th>
+                <th>Usuario</th>
+                <th>Fecha Creación</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentItems.map((ioc) => (
+                <tr key={ioc.id}>
+                  {editingIoCId === ioc.id ? (
+                    <>
+                      <td>
+                        <input
+                          type="text"
+                          value={editedIoC.tipo}
+                          onChange={(e) => handleEditChange(e, "tipo")}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={editedIoC.valor}
+                          onChange={(e) => handleEditChange(e, "valor")}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={editedIoC.cliente}
+                          onChange={(e) => handleEditChange(e, "cliente")}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={editedIoC.categoria}
+                          onChange={(e) => handleEditChange(e, "categoria")}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={editedIoC.tecnologia_deteccion}
+                          onChange={(e) => handleEditChange(e, "tecnologia_deteccion")}
+                        />
+                      </td>
+                      <td>
+                        <select
+                          value={editedIoC.pertenece_a_incidente}
+                          onChange={(e) =>
+                            setEditedIoC({ ...editedIoC, pertenece_a_incidente: e.target.value === "true" })
+                          }
+                        >
+                          <option value="true">Sí</option>
+                          <option value="false">No</option>
+                        </select>
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={editedIoC.criticidad}
+                          onChange={(e) => handleEditChange(e, "criticidad")}
+                        />
+                      </td>
+                      <td>{ioc.usuario_registro}</td>
+                      <td>
+                        <input
+                          type="datetime-local"
+                          value={new Date(editedIoC.fecha_creacion).toISOString().slice(0, 16)}
+                          onChange={(e) => handleEditChange(e, "fecha_creacion")}
+                        />
+                      </td>
+                      <td>
+                        <button onClick={() => handleSave(ioc.id)}>Guardar</button>
+                        <button onClick={() => setEditingIoCId(null)}>Cancelar</button>
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <td>{ioc.tipo}</td>
+                      <td>{ioc.valor}</td>
+                      <td>{ioc.cliente}</td>
+                      <td>{ioc.categoria}</td>
+                      <td>{ioc.tecnologia_deteccion}</td>
+                      <td>{ioc.pertenece_a_incidente ? "Sí" : "No"}</td>
+                      <td>{ioc.criticidad}</td>
+                      <td>{ioc.usuario_registro}</td>
+                      <td>
+                        {new Date(ioc.fecha_creacion).toLocaleString("es-ES", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </td>
+                      <td>
+                        <button onClick={() => handleEditClick(ioc)}>Editar</button>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
     ) : (
         <p className="no-results">Elementos no encontrados</p>
       )}
