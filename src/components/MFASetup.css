@@ -1,0 +1,81 @@
+.mfa-setup-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .mfa-setup-container h2 {
+    color: #333;
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .mfa-setup-container p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .mfa-qrcode {
+    width: 180px;
+    height: 180px;
+    border: 5px solid #ddd;
+    border-radius: 10px;
+    margin: 10px auto;
+    display: block;
+  }
+  
+  .mfa-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mfa-form label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .mfa-form input {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+    text-align: center;
+  }
+  
+  .mfa-button {
+    width: 85%;
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.3s ease;
+  }
+  
+  .mfa-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .mfa-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
