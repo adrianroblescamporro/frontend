@@ -26,10 +26,11 @@ function App() {
       </nav>
       {/* Modal para crear usuario */}
       {isModalOpen && <UserCreationModal onClose={() => setIsModalOpen(false)} />}
-      {!isAuthenticated ? <LoginForm onLogin={handleLogin} /> : <h1>Bienvenido al sistema</h1>}
-      <div className="content">
-      <IoCManagement />
-      </div>
+      {!isAuthenticated ? <LoginForm onLogin={handleLogin} /> : 
+        <div className="content">
+        <IoCManagement />
+        </div>
+      }
       <footer className="footer">© 2025 BE:SEC. Todos los derechos reservados.</footer>
     </div>
   );

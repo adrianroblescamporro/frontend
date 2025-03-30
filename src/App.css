@@ -20,7 +20,7 @@ body {
 /* Contenedor principal */
 .container {
   /*max-width: 1000px;*/
-  width: auto;
+  width: fit-content;
   margin: 10px auto;
   padding: 10px;
   background: var(--white);
@@ -72,7 +72,7 @@ body {
 
 /* Ajustar el contenido para que no quede debajo de la barra */
 .content {
-  width: auto;
+  width: fit-content;
   margin-top: 50px; /* Ajustar según la altura de la barra */
   padding: 20px;
   padding-bottom: 3px;
