@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./MFASetup.css";
+import "./MFAsetup.css";
 
 
 const MFASetup = ({ username, onMFASuccess }) => {
