@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { api } from "../api"; // Importar la instancia de api
 import "./UserCreationModal.css"; // Importar el CSS
 
 const UserCreationModal = ({ onClose }) => {
@@ -37,7 +37,7 @@ const UserCreationModal = ({ onClose }) => {
     }
     
     try {
-      await axios.post("http://127.0.0.1:8000/api/register", formData);
+      await api.post("/register", formData);
       alert("Usuario creado exitosamente");
       onClose();
     } catch (error) {

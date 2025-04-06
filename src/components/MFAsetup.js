@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { api } from "../api"; // Importar la instancia de api
 import "./MFAsetup.css";
 
 
@@ -13,7 +13,7 @@ const MFASetup = ({ username, onMFASuccess }) => {
   useEffect(() => {
     const fetchQRCode = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/mfa/qrcode/${username}`, {
+        const response = await api.get(`/mfa/qrcode/${username}`, {
           responseType: "arraybuffer", // Para recibir la imagen en formato binario
         });
 
@@ -38,8 +38,8 @@ const MFASetup = ({ username, onMFASuccess }) => {
         const formDataEncoded = new URLSearchParams();
         formDataEncoded.append("username", username);
         formDataEncoded.append("password", mfaCode);
-        await axios.post(
-            "http://127.0.0.1:8000/api/mfa/verify",
+        await api.post(
+            "/mfa/verify",
             formDataEncoded,
             { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
         );

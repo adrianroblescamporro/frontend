@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { api } from "../api"; // Importar la instancia de api
 import MFASetup from "./MFAsetup.js";
 import "./LoginForm.css"; // Importar el CSS
 
@@ -43,8 +43,8 @@ const LoginForm = ({ onLogin }) => {
     
     try {
       
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/login",
+      const response = await api.post(
+        "/login",
         {
             username: formData.username,
             password: formData.password,

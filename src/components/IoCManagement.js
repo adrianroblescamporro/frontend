@@ -1,5 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { api } from "../api"; // Importar la instancia de api
+import {
+  tipoOpciones,
+  clienteOpciones,
+  categoriaOpciones,
+  tecnologiaOpciones,
+  criticidadOpciones,
+} from "../constants"; 
 import ReactPaginate from "react-paginate";
 import IoCChart from "./IoCChart";
 import ReportGenerator from "./ReportGenerator";
@@ -237,10 +244,9 @@ function IoCManagement() {
           <label>Tipo:</label>
           <select name="tipo" value={formData.tipo} onChange={handleChange} required>
             <option value="">Seleccione...</option>
-            <option value="IP">IP</option>
-            <option value="Dominio">Dominio</option>
-            <option value="URL">URL</option>
-            <option value="Hash">Hash</option>
+            {tipoOpciones.map((opcion) => (
+              <option key={opcion} value={opcion}>{opcion}</option>
+            ))}
           </select>
 
           <label>Valor:</label>
@@ -249,29 +255,25 @@ function IoCManagement() {
           <label>Cliente:</label>
           <select name="cliente" value={formData.cliente} onChange={handleChange} required>
             <option value="">Seleccione...</option>
-            <option value="Empresa A">Empresa A</option>
-            <option value="Empresa B">Empresa B</option>
-            <option value="Empresa C">Empresa C</option>
-            <option value="Empresa D">Empresa D</option>
+            {clienteOpciones.map((opcion) => (
+              <option key={opcion} value={opcion}>{opcion}</option>
+            ))}
           </select>
 
           <label>Categoría:</label>
           <select name="categoria" value={formData.categoria} onChange={handleChange} required>
             <option value="">Seleccione...</option>
-            <option value="Phishing">Phishing</option>
-            <option value="Ransomware">Ransomware</option>
-            <option value="Malware">Malware</option>
-            <option value="Otro">Otro</option>
+            {categoriaOpciones.map((opcion) => (
+              <option key={opcion} value={opcion}>{opcion}</option>
+            ))}
           </select>
 
           <label>Tecnología Detección:</label>
           <select name="tecnologia_deteccion" value={formData.tecnologia_deteccion} onChange={handleChange} required>
             <option value="">Seleccione...</option>
-            <option value="NDR">NDR</option>
-            <option value="SIEM">SIEM</option>
-            <option value="XDR">XDR</option>
-            <option value="Correo">Correo</option>
-            <option value="Otros">Otros</option>
+            {tecnologiaOpciones.map((opcion) => (
+              <option key={opcion} value={opcion}>{opcion}</option>
+            ))}
           </select>
 
           <label>Pertenece a un incidente:</label>
@@ -280,10 +282,9 @@ function IoCManagement() {
           <label>Criticidad:</label>
           <select name="criticidad" value={formData.criticidad} onChange={handleChange} required>
             <option value="">Seleccione...</option>
-            <option value="Baja">Baja</option>
-            <option value="Media">Media</option>
-            <option value="Alta">Alta</option>
-            <option value="Crítica">Crítica</option>
+            {criticidadOpciones.map((opcion) => (
+              <option key={opcion} value={opcion}>{opcion}</option>
+            ))}
           </select>
 
           <label>Fecha de Detección:</label>
@@ -330,10 +331,9 @@ function IoCManagement() {
             onChange={(e) => setFilters({ ...filters, tipo: e.target.value })}
           >
             <option value="">Todos</option>
-            <option value="IP">IP</option>
-            <option value="Dominio">Dominio</option>
-            <option value="URL">URL</option>
-            <option value="Hash">Hash</option>
+            {tipoOpciones.map((opcion) => (
+              <option key={opcion} value={opcion}>{opcion}</option>
+            ))}
           </select>
         </div>
 
@@ -345,9 +345,9 @@ function IoCManagement() {
             onChange={(e) => setFilters({ ...filters, cliente: e.target.value })}
           >
             <option value="">Todos</option>
-            <option value="Empresa A">Empresa A</option>
-            <option value="Empresa B">Empresa B</option>
-            <option value="Empresa C">Empresa C</option>
+            {clienteOpciones.map((opcion) => (
+              <option key={opcion} value={opcion}>{opcion}</option>
+            ))}
           </select>
         </div>
 
@@ -359,9 +359,9 @@ function IoCManagement() {
             onChange={(e) => setFilters({ ...filters, categoria: e.target.value })}
           >
             <option value="">Todas</option>
-            <option value="Phishing">Phishing</option>
-            <option value="Ransomware">Ransomware</option>
-            <option value="Malware">Malware</option>
+            {categoriaOpciones.map((opcion) => (
+              <option key={opcion} value={opcion}>{opcion}</option>
+            ))}
           </select>
         </div>
 
@@ -373,11 +373,9 @@ function IoCManagement() {
             onChange={(e) => setFilters({ ...filters, tecnologia_deteccion: e.target.value })}
           >
             <option value="">Todas</option>
-            <option value="NDR">NDR</option>
-            <option value="SIEM">SIEM</option>
-            <option value="XDR">XDR</option>
-            <option value="Correo">Correo</option>
-            <option value="Otros">Otros</option>
+            {tecnologiaOpciones.map((opcion) => (
+              <option key={opcion} value={opcion}>{opcion}</option>
+            ))}
           </select>
         </div>
 
@@ -389,10 +387,9 @@ function IoCManagement() {
             onChange={(e) => setFilters({ ...filters, criticidad: e.target.value })}
           >
             <option value="">Todas</option>
-            <option value="Baja">Baja</option>
-            <option value="Media">Media</option>
-            <option value="Alta">Alta</option>
-            <option value="Crítica">Crítica</option>
+            {criticidadOpciones.map((opcion) => (
+              <option key={opcion} value={opcion}>{opcion}</option>
+            ))}
           </select>
         </div>
 
