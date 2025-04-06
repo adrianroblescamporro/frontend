@@ -10,10 +10,10 @@ import "../App.css";
 
 function IoCManagement() {
   const [iocs, setIocs] = useState([]);
+  const token = localStorage.getItem("token");
 
   // Función para obtener el usuario del token
   const getUserDataFromToken = () => {
-    const token = localStorage.getItem("token");
     if (token) {
       try {
         const decoded = jwtDecode(token); // Decodifica el JWT
@@ -159,6 +159,24 @@ function IoCManagement() {
     }
   };
   
+  // Eliminar IoC
+  const handleDelete = async (iocId) => {
+    const confirm = window.confirm("¿Estás seguro de que deseas eliminar este IoC?");
+    if (!confirm) return;
+  
+    try {
+      await api.delete(`/iocs/${iocId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      // Elimina el IoC del estado
+      setIocs((prev) => prev.filter((ioc) => ioc.id !== iocId));
+    } catch (error) {
+      console.error("Error al eliminar el IoC:", error);
+      alert("No se pudo eliminar el IoC.");
+    }
+  };
+
   const [filters, setFilters] = useState({
     tipo: "",
     valor:"",
@@ -498,6 +516,11 @@ function IoCManagement() {
                       </td>
                       <td>
                         <button onClick={() => handleEditClick(ioc)}>Editar</button>
+                        {role === "admin" && (
+                          <button onClick={() => handleDelete(ioc.id)}>
+                            Eliminar
+                          </button>
+                        )}
                       </td>
                     </>
                   )}
