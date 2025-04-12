@@ -1,0 +1,35 @@
+.edl {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Cuatro columnas en la primera fila */
+    gap: 15px;
+    background-color: var(--primary-color); /* Azul oscuro Be-Sec */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    align-items: center;
+}
+
+/* Estilos generales para los grupos de filtros */
+.edl-group {
+width: auto;
+margin-top: 1px;
+display: flex;
+flex-direction: column;
+}
+
+/* Etiquetas */
+.edl label {
+  font-weight: bold;
+  color: var(--white); 
+  margin-bottom: 5px;
+}
+
+.edl button {
+    align-items: center;
+    background-color: white;
+    color: var(--primary-color);
+}
+
+.report button:hover {
+    background-color: var(--accent-color);
+}

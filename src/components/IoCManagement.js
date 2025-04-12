@@ -10,6 +10,7 @@ import {
 import ReactPaginate from "react-paginate";
 import IoCChart from "./IoCChart";
 import ReportGenerator from "./ReportGenerator";
+import EDLGenerator from "./EDLGenerator";
 import { jwtDecode } from "jwt-decode";
 
 
@@ -254,7 +255,7 @@ function IoCManagement() {
 
           <label>Cliente:</label>
           <select name="cliente" value={formData.cliente} onChange={handleChange} required>
-            <option value="">Seleccione...</option>
+            <option value="" disabled>Seleccione...</option>
             {clienteOpciones.map((opcion) => (
               <option key={opcion} value={opcion}>{opcion}</option>
             ))}
@@ -262,7 +263,7 @@ function IoCManagement() {
 
           <label>Categoría:</label>
           <select name="categoria" value={formData.categoria} onChange={handleChange} required>
-            <option value="">Seleccione...</option>
+            <option value="" disabled>Seleccione...</option>
             {categoriaOpciones.map((opcion) => (
               <option key={opcion} value={opcion}>{opcion}</option>
             ))}
@@ -270,7 +271,7 @@ function IoCManagement() {
 
           <label>Tecnología Detección:</label>
           <select name="tecnologia_deteccion" value={formData.tecnologia_deteccion} onChange={handleChange} required>
-            <option value="">Seleccione...</option>
+            <option value="" disabled>Seleccione...</option>
             {tecnologiaOpciones.map((opcion) => (
               <option key={opcion} value={opcion}>{opcion}</option>
             ))}
@@ -281,7 +282,7 @@ function IoCManagement() {
 
           <label>Criticidad:</label>
           <select name="criticidad" value={formData.criticidad} onChange={handleChange} required>
-            <option value="">Seleccione...</option>
+            <option value="" disabled>Seleccione...</option>
             {criticidadOpciones.map((opcion) => (
               <option key={opcion} value={opcion}>{opcion}</option>
             ))}
@@ -305,6 +306,11 @@ function IoCManagement() {
         <div className="report-section">
         <h2>Generar Reporte</h2>
         <ReportGenerator />
+        </div>
+
+        <div className="edl-section">
+        <h2>Generar EDL</h2>
+        <EDLGenerator />
         </div>
 
       </div>

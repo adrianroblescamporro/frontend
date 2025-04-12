@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { api } from "../api";
-import "./ReportGenerator.css"
+import "./ReportGenerator.css";
+import { clienteOpciones } from "../constants";
 
 const ReportGenerator = () => {
   const [startDate, setStartDate] = useState("");
@@ -51,10 +52,9 @@ const ReportGenerator = () => {
       <label>Cliente:</label>
       <select value={clientes} onChange={(e) => setCliente(e.target.value)}>
         <option value="">Todos</option>
-        <option value="Empresa A">Empresa A</option>
-        <option value="Empresa B">Empresa B</option>
-        <option value="Empresa C">Empresa C</option>
-        <option value="Empresa D">Empresa D</option>
+        {clienteOpciones.map((opcion) => (
+          <option key={opcion} value={opcion}>{opcion}</option>
+        ))}
       </select>
       </div>
 
