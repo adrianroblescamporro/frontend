@@ -11,6 +11,7 @@ import ReactPaginate from "react-paginate";
 import IoCChart from "./IoCChart";
 import ReportGenerator from "./ReportGenerator";
 import EDLGenerator from "./EDLGenerator";
+import EnrichmentModal from "./EnrichmentModal";
 import { jwtDecode } from "jwt-decode";
 
 
@@ -185,6 +186,14 @@ function IoCManagement() {
     }
   };
 
+  // Enriquecer IOC
+
+  const [selectedIoC, setSelectedIoC] = useState(null);
+
+  const handleOpenEnrichment = (ioc) => setSelectedIoC(ioc.valor);
+  const handleCloseEnrichment = () => setSelectedIoC(null);
+
+  // Filtrar
   const [filters, setFilters] = useState({
     tipo: "",
     valor:"",
@@ -523,6 +532,11 @@ function IoCManagement() {
                           <button onClick={() => handleDelete(ioc.id)}>
                             Eliminar
                           </button>
+                        )}
+
+                        <button onClick={() => handleOpenEnrichment(ioc)}>🔍 Enriquecer</button>
+                        {selectedIoC && (
+                          <EnrichmentModal ioc={selectedIoC} onClose={handleCloseEnrichment} />
                         )}
                       </td>
                     </>
