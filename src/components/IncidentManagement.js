@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { api } from "../api"; 
 import ReactPaginate from "react-paginate";
 import IncidentModal from "./IncidentModal";
@@ -17,15 +17,14 @@ const IncidentList = () => {
   const [isIncidentModalOpen, setIsIncidentModalOpen] = useState(false);
   const [editId, setEditId] = useState(null);
 
-
+  const fetchData = useCallback(async () => {
+    const response = await api.get("/incidentes");
+    setIncidentes(response.data);
+  },[]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await api.get("/incidentes");
-      setIncidentes(response.data);
-    };
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   // Función para cambiar de página
   const handlePageChange = ({ selected }) => {

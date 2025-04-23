@@ -4,11 +4,9 @@ import "./IncidentForm.css";
 import { jwtDecode } from "jwt-decode";
 import { clienteOpciones } from "../constants"; 
 
-
-const token = localStorage.getItem("token");
-
 // Función para obtener el usuario del token
   const getUserDataFromToken = () => {
+    const token = localStorage.getItem("token");
     if (token) {
       try {
         const decoded = jwtDecode(token); // Decodifica el JWT
@@ -20,7 +18,7 @@ const token = localStorage.getItem("token");
     return [null,null];
   };
 
-const user= getUserDataFromToken()[0];
+const [user]= getUserDataFromToken();
 
 const IncidentForm = ({ onCreated }) => {
   const [formData, setFormData] = useState({
@@ -64,6 +62,7 @@ const IncidentForm = ({ onCreated }) => {
     setSuccess("");
 
     try {
+      console.log("Payload enviado:", formData);
       const { data: incidente } = await api.post("/incidentes", formData);
 
       for (const iocId of selectedIoCs) {
@@ -105,7 +104,7 @@ const IncidentForm = ({ onCreated }) => {
         </select>
 
         <label>Fecha del incidente:</label>
-        <input type="datetime-local" name="fecha_fin" value={formData.fecha_incidente} onChange={handleChange} />
+        <input type="datetime-local" name="fecha_incidente" value={formData.fecha_incidente} onChange={handleChange} required/>
 
 
         <label>Seleccionar IoCs relacionados:</label>
