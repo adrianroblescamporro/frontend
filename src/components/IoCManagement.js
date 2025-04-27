@@ -12,6 +12,7 @@ import IoCChart from "./IoCChart";
 import ReportGenerator from "./ReportGenerator";
 import EDLGenerator from "./EDLGenerator";
 import EnrichmentModal from "./EnrichmentModal";
+import AddToIncidentModal from "./AddToIncidentModal";
 import { jwtDecode } from "jwt-decode";
 
 
@@ -244,7 +245,8 @@ function IoCManagement() {
     setCurrentPage(selected);
   };
 
-  
+  //Añadir IoC a Incidente
+  const [selectedIoCforIncident, setSelectedIoCforIncident] = useState(null);
 
   return (
     <div className="page">
@@ -537,6 +539,20 @@ function IoCManagement() {
                         <button onClick={() => handleOpenEnrichment(ioc)}>🔍 Enriquecer</button>
                         {selectedIoC && (
                           <EnrichmentModal ioc={selectedIoC} onClose={handleCloseEnrichment} />
+                        )}
+
+                        <button onClick={() => setSelectedIoCforIncident(ioc.id)}>
+                            Asociar a Incidente
+                        </button>
+                        {selectedIoCforIncident && (
+                          <AddToIncidentModal
+                            iocId={selectedIoCforIncident}
+                            onClose={() => setSelectedIoCforIncident(null)}
+                            onSuccess={() => {
+                              setSelectedIoCforIncident(null);
+                              // Si quieres recargar IoCs o refrescar la vista aquí
+                            }}
+                          />
                         )}
                       </td>
                     </>
