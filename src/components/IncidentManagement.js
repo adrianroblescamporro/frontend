@@ -3,8 +3,7 @@ import { api } from "../api";
 import ReactPaginate from "react-paginate";
 import IncidentModal from "./IncidentModal";
 import IncidentEdit from "./IncidentEdit";
-
-
+import IoCDetailModal from "./IoCDetailModal";
 
 const IncidentList = () => {
   const [incidentes, setIncidentes] = useState([]);
@@ -16,6 +15,7 @@ const IncidentList = () => {
 
   const [isIncidentModalOpen, setIsIncidentModalOpen] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [selectedIoC, setSelectedIoC] = useState(null);
 
   const fetchData = useCallback(async () => {
     const response = await api.get("/incidentes");
@@ -43,7 +43,7 @@ const IncidentList = () => {
           <strong>IoCs relacionados:</strong>
           <ul>
             {inc.iocs.map((ioc) => (
-              <li key={ioc.id}>
+              <li key={ioc.id} onClick={() => setSelectedIoC(ioc)} style={{ cursor: "pointer", color: "#007bff" }}>
                 {ioc.tipo} - {ioc.valor}
               </li>
             ))}
@@ -87,6 +87,11 @@ const IncidentList = () => {
         }}
     />
     )}
+
+    {selectedIoC && (
+      <IoCDetailModal ioc={selectedIoC} onClose={() => setSelectedIoC(null)} />
+    )}
+
     </div>
   );
 };

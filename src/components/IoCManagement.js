@@ -434,7 +434,7 @@ function IoCManagement() {
                 <th>Incidente</th>
                 <th>Criticidad</th>
                 <th>Usuario</th>
-                <th>Fecha Creación</th>
+                <th>Fecha Detección</th>
                 <th>Acciones</th>
               </tr>
             </thead>
