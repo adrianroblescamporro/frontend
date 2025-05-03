@@ -13,6 +13,7 @@ import ReportGenerator from "./ReportGenerator";
 import EDLGenerator from "./EDLGenerator";
 import EnrichmentModal from "./EnrichmentModal";
 import AddToIncidentModal from "./AddToIncidentModal";
+import IoCIncidentsModal from "./IoCIncidentsModal";
 import { jwtDecode } from "jwt-decode";
 
 
@@ -193,6 +194,11 @@ function IoCManagement() {
 
   const handleOpenEnrichment = (ioc) => setSelectedIoC(ioc.valor);
   const handleCloseEnrichment = () => setSelectedIoC(null);
+
+  // Mostrar incidentes relacionados
+  const [IoCforIncidentList, setIoCforIncidentList] = useState(null);
+  const [showIncidentModal, setShowIncidentModal] = useState(false);
+
 
   // Filtrar
   const [filters, setFilters] = useState({
@@ -516,7 +522,23 @@ function IoCManagement() {
                       <td>{ioc.cliente}</td>
                       <td>{ioc.categoria}</td>
                       <td>{ioc.tecnologia_deteccion}</td>
-                      <td>{ioc.pertenece_a_incidente ? "Sí" : "No"}</td>
+                      <td>{ioc.pertenece_a_incidente ? (<>Sí 
+                        <button onClick={() => {
+                            setIoCforIncidentList(ioc);
+                            setShowIncidentModal(true);
+                          }}>Ver incidentes</button>
+
+                        {showIncidentModal && IoCforIncidentList && (
+                          <IoCIncidentsModal
+                            ioc={IoCforIncidentList}
+                            onClose={() => {
+                              setShowIncidentModal(false);
+                              setIoCforIncidentList(null);
+                            }}
+                          />
+                        )}
+                      </>)
+                      : "No"}</td>
                       <td>{ioc.criticidad}</td>
                       <td>{ioc.usuario_registro}</td>
                       <td>
