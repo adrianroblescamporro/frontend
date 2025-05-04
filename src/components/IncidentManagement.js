@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { api } from "../api"; 
+import React, { useState } from "react";
+//import { api } from "../api"; 
 import ReactPaginate from "react-paginate";
 import IncidentModal from "./IncidentModal";
 import IncidentEdit from "./IncidentEdit";
 import IoCDetailModal from "./IoCDetailModal";
 
-const IncidentList = () => {
-  const [incidentes, setIncidentes] = useState([]);
+const IncidentList = ({ incidentes, loading, fetchIncidentes }) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 8; 
+  const itemsPerPage = 8;
   const offset = currentPage * itemsPerPage;
   const currentItems = incidentes.slice(offset, offset + itemsPerPage);
   const pageCount = Math.ceil(incidentes.length / itemsPerPage);
@@ -17,29 +16,10 @@ const IncidentList = () => {
   const [editId, setEditId] = useState(null);
   const [selectedIoC, setSelectedIoC] = useState(null);
 
-  const [loading, setLoading] = useState(true);
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get("/incidentes");
-        setIncidentes(response.data);
-      } catch (error) {
-        console.error("Error al obtener los incidentes", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   if (loading) {
     return <div>Cargando...</div>;
   }
 
-  // Función para cambiar de página
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
   };
@@ -62,20 +42,20 @@ const IncidentList = () => {
             ))}
           </ul>
           <button onClick={() => setEditId(inc.id)}>Editar IoCs</button>
-            {editId && (
+          {editId && (
             <IncidentEdit
-                incidenteId={editId}
-                onClose={() => setEditId(null)}
-                onUpdated={() => {
+              incidenteId={editId}
+              onClose={() => setEditId(null)}
+              onUpdated={() => {
                 setEditId(null);
-                // refrescar lista si hace falta
-                }}
+                // Aquí puedes llamar a fetchIncidentes si quieres
+              }}
             />
-            )}
+          )}
         </div>
       ))}
 
-    <ReactPaginate
+      <ReactPaginate
         previousLabel={"← Anterior"}
         nextLabel={"Siguiente →"}
         breakLabel={"..."}
@@ -87,24 +67,23 @@ const IncidentList = () => {
         activeClassName={"active"}
       />
 
-    <button className="add-incident-button" onClick={() => setIsIncidentModalOpen(true)}>
-    Crear Incidente
-    </button>
+      <button className="add-incident-button" onClick={() => setIsIncidentModalOpen(true)}>
+        Crear Incidente
+      </button>
 
-    {isIncidentModalOpen && (
-    <IncidentModal
-        onClose={() => setIsIncidentModalOpen(false)}
-        onCreated={() => {
-        // opcional: refrescar incidentes
-        setIsIncidentModalOpen(false);
-        }}
-    />
-    )}
+      {isIncidentModalOpen && (
+        <IncidentModal
+          onClose={() => setIsIncidentModalOpen(false)}
+          onCreated={() => {
+            fetchIncidentes();
+            setIsIncidentModalOpen(false);
+          }}
+        />
+      )}
 
-    {selectedIoC && (
-      <IoCDetailModal ioc={selectedIoC} onClose={() => setSelectedIoC(null)} />
-    )}
-
+      {selectedIoC && (
+        <IoCDetailModal ioc={selectedIoC} onClose={() => setSelectedIoC(null)} />
+      )}
     </div>
   );
 };

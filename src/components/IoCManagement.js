@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect} from "react";
 import { api } from "../api"; // Importar la instancia de api
 import {
   tipoOpciones,
@@ -19,8 +19,7 @@ import { jwtDecode } from "jwt-decode";
 
 import "../App.css";
 
-function IoCManagement() {
-  const [iocs, setIocs] = useState([]);
+function IoCManagement({ iocs, fetchIoCs, loading }) {
   const token = localStorage.getItem("token");
 
   // Función para obtener el usuario del token
@@ -52,31 +51,21 @@ function IoCManagement() {
   const itemsPerPage = 8; // Cantidad de IoCs por página
   const [chartData, setChartData] = useState([]);
 
-  const fetchIoCs = useCallback(async () => {
-    try {
-      const response = await api.get("/iocs");
-      const fetchedIoCs = response.data;
-      setIocs(fetchedIoCs);
-  
-      const last7Days = Array.from({ length: 7 }, (_, i) => {
-        const date = new Date();
-        date.setDate(date.getDate() - (6 - i));
-        return date.toISOString().split("T")[0];
-      });
-  
-      const counts = last7Days.map(date => ({
-        date,
-        count: fetchedIoCs.filter(ioc => ioc.fecha_creacion.startsWith(date)).length,
-      }));
-      setChartData(counts);
-    } catch (error) {
-      console.error("Error cargando IoCs:", error);
-    }
-  }, []); // No cambiará en cada render
-  
   useEffect(() => {
-    fetchIoCs();
-  }, [fetchIoCs]); 
+    const last7Days = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date();
+      date.setDate(date.getDate() - (6 - i));
+      return date.toISOString().split("T")[0];
+    });
+  
+    const counts = last7Days.map(date => ({
+      date,
+      count: iocs.filter(ioc => ioc.fecha_creacion.startsWith(date)).length,
+    }));
+  
+    setChartData(counts);
+  }, [iocs]);
+  
 
   const validateValor = (valor) => {
     // Permite solo caracteres alfanuméricos, puntos, barras y guiones en URLs/IPs/Dominios
@@ -181,7 +170,7 @@ function IoCManagement() {
       });
   
       // Elimina el IoC del estado
-      setIocs((prev) => prev.filter((ioc) => ioc.id !== iocId));
+      fetchIoCs();
     } catch (error) {
       console.error("Error al eliminar el IoC:", error);
       alert("No se pudo eliminar el IoC.");
