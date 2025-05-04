@@ -584,7 +584,7 @@ function IoCManagement() {
             </tbody>
           </table>
     ) : (
-        <p className="no-results">Elementos no encontrados</p>
+        <p className="no-results">Cargando elementos...</p>
       )}
 
         {/* Paginación */}

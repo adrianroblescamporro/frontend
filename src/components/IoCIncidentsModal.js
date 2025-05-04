@@ -29,7 +29,7 @@ const IoCIncidentsModal = ({ ioc, onClose }) => {
           {incidentes.length > 0 ? (
             incidentes.map((inc) => (
               <li key={inc.id}>
-                <strong>{inc.nombre}</strong> – {inc.descripcion}
+                <strong>{inc.nombre}</strong> {inc.descripcion}
               </li>
             ))
           ) : (

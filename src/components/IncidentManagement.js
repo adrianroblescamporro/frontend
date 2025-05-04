@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "../api"; 
 import ReactPaginate from "react-paginate";
 import IncidentModal from "./IncidentModal";
@@ -17,14 +17,27 @@ const IncidentList = () => {
   const [editId, setEditId] = useState(null);
   const [selectedIoC, setSelectedIoC] = useState(null);
 
-  const fetchData = useCallback(async () => {
-    const response = await api.get("/incidentes");
-    setIncidentes(response.data);
-  },[]);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get("/incidentes");
+        setIncidentes(response.data);
+      } catch (error) {
+        console.error("Error al obtener los incidentes", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
-  }, [fetchData]);
+  }, []);
+
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
 
   // Función para cambiar de página
   const handlePageChange = ({ selected }) => {

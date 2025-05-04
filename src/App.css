@@ -196,7 +196,7 @@ button:hover {
   text-align: center;
   font-size: 16px;
   font-weight: bold;
-  color: #faca08;
+  color: var(--text-color);
   margin-top: 20px;
 }
 

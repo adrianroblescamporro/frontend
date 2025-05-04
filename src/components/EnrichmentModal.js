@@ -6,6 +6,7 @@ const EnrichmentModal = ({ ioc, onClose }) => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  
   useEffect(() => {
     const fetchEnrichment = async () => {
       try {
