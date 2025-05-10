@@ -1,0 +1,18 @@
+.charts-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .chart-box {
+    background-color: #f9f9f9;
+    border: 1px solid #e1e4e8;
+    border-radius: 10px;
+    padding: 16px;
+    flex: 1;
+    max-width: 25%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+  

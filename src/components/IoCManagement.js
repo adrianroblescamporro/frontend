@@ -14,6 +14,7 @@ import EDLGenerator from "./EDLGenerator";
 import EnrichmentModal from "./EnrichmentModal";
 import AddToIncidentModal from "./AddToIncidentModal";
 import IoCIncidentsModal from "./IoCIncidentsModal";
+import IoCCharts from "./IoCCharts";
 import { jwtDecode } from "jwt-decode";
 
 
@@ -588,10 +589,11 @@ function IoCManagement({ iocs, fetchIoCs, loading }) {
         containerClassName={"pagination"}
         activeClassName={"active"}
       />
-      <IoCChart chartData={chartData} />
 
-      </div>
+        <IoCCharts iocs={iocs} />
+        <IoCChart chartData={chartData} />
 
+    </div>
     </div>
   );
 }
