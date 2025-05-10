@@ -17,10 +17,28 @@ function App() {
   const [Iocloading, setIocLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsAuthenticated(true);
-    }
+    const verifyToken = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const response = await api.get("/api/auth/verify-token", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (response.status==="valid") {
+            setIsAuthenticated(true);
+          } else {
+            localStorage.removeItem("token");
+            setIsAuthenticated(false);
+          }
+        } catch (error) {
+          console.error("Error verificando el token:", error);
+          setIsAuthenticated(false);
+        }
+      }
+    };
+    verifyToken();
   }, []);
 
   const fetchIoCs = async () => {
