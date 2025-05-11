@@ -4,6 +4,7 @@ import IoCManagement from "./components/IoCManagement";
 import IncidentManagement from "./components/IncidentManagement";
 import UserCreationModal from "./components/UserCreationModal";
 import LoginForm from "./components/LoginForm";
+import { jwtDecode } from "jwt-decode";
 import "./App.css";
 
 function App() {
@@ -68,6 +69,22 @@ function App() {
     setIsAuthenticated(false);
   };
 
+  const token = localStorage.getItem("token");
+
+  // Función para obtener el usuario del token
+  const getUserDataFromToken = () => {
+    if (token) {
+      try {
+        const decoded = jwtDecode(token); // Decodifica el JWT
+        return [decoded.role]; // "sub" es el claim que contiene el username y "role" el que contiene el rol
+      } catch (error) {
+        console.error("Error al decodificar el token:", error);
+      }
+    }
+    return [null,null,null];
+  };
+
+  const [role] = getUserDataFromToken();
   return (
     <div className="container">
       <nav className="navbar">
@@ -77,7 +94,9 @@ function App() {
         </div>
         {isAuthenticated && (
           <div className="navbar-actions">
-            <button className="button1" onClick={() => setIsModalOpen(true)}>Crear Usuario</button>
+            {role === "admin" && (
+              <button className="button1" onClick={() => setIsModalOpen(true)}>Crear Usuario</button>
+            )}
             <button className="button1" onClick={handleLogout}>Cerrar sesión</button>
             <button className="button2" onClick={() => { setIsIoC(true); setIsIncident(false); }}>Ver IoCs</button>
             <button className="button2" onClick={() => { setIsIoC(false); setIsIncident(true); }}>Ver Incidentes</button>

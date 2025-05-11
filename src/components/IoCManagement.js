@@ -28,15 +28,15 @@ function IoCManagement({ iocs, fetchIoCs, loading }) {
     if (token) {
       try {
         const decoded = jwtDecode(token); // Decodifica el JWT
-        return [decoded.sub, decoded.role]; // "sub" es el claim que contiene el username y "role" el que contiene el rol
+        return [decoded.sub, decoded.role, decoded.enterprise]; // "sub" es el claim que contiene el username y "role" el que contiene el rol
       } catch (error) {
         console.error("Error al decodificar el token:", error);
       }
     }
-    return [null,null];
+    return [null,null,null];
   };
 
-  const [user,role] = getUserDataFromToken();
+  const [user,role,enterprise] = getUserDataFromToken();
   const [formData, setFormData] = useState({
     tipo: "",
     valor: "",
@@ -263,7 +263,7 @@ function IoCManagement({ iocs, fetchIoCs, loading }) {
           <label>Cliente:</label>
           <select name="cliente" value={formData.cliente} onChange={handleChange} required>
             <option value="" disabled>Seleccione...</option>
-            {clienteOpciones.map((opcion) => (
+            {(enterprise === "Todas" ? clienteOpciones : [enterprise]).map((opcion) => (
               <option key={opcion} value={opcion}>{opcion}</option>
             ))}
           </select>
@@ -358,7 +358,7 @@ function IoCManagement({ iocs, fetchIoCs, loading }) {
             onChange={(e) => setFilters({ ...filters, cliente: e.target.value })}
           >
             <option value="">Todos</option>
-            {clienteOpciones.map((opcion) => (
+            {(enterprise === "Todas" ? clienteOpciones : [enterprise]).map((opcion) => (
               <option key={opcion} value={opcion}>{opcion}</option>
             ))}
           </select>
@@ -440,11 +440,14 @@ function IoCManagement({ iocs, fetchIoCs, loading }) {
                   {editingIoCId === ioc.id ? (
                     <>
                       <td>
-                        <input
-                          type="text"
+                        <select
                           value={editedIoC.tipo}
                           onChange={(e) => handleEditChange(e, "tipo")}
-                        />
+                        >
+                          {tipoOpciones.map((opcion) => (
+                            <option key={opcion} value={opcion}>{opcion}</option>
+                          ))}
+                        </select>
                       </td>
                       <td>
                         <input
@@ -454,25 +457,34 @@ function IoCManagement({ iocs, fetchIoCs, loading }) {
                         />
                       </td>
                       <td>
-                        <input
-                          type="text"
+                        <select
                           value={editedIoC.cliente}
                           onChange={(e) => handleEditChange(e, "cliente")}
-                        />
+                        >
+                          {(enterprise === "Todas" ? clienteOpciones : [enterprise]).map((opcion) => (
+                            <option key={opcion} value={opcion}>{opcion}</option>
+                          ))}
+                        </select>
                       </td>
                       <td>
-                        <input
-                          type="text"
+                        <select
                           value={editedIoC.categoria}
                           onChange={(e) => handleEditChange(e, "categoria")}
-                        />
+                        >
+                          {categoriaOpciones.map((opcion) => (
+                            <option key={opcion} value={opcion}>{opcion}</option>
+                          ))}
+                        </select>
                       </td>
                       <td>
-                        <input
-                          type="text"
+                        <select
                           value={editedIoC.tecnologia_deteccion}
                           onChange={(e) => handleEditChange(e, "tecnologia_deteccion")}
-                        />
+                        >
+                          {tecnologiaOpciones.map((opcion) => (
+                            <option key={opcion} value={opcion}>{opcion}</option>
+                          ))}
+                        </select>
                       </td>
                       <td>
                         <select
@@ -486,11 +498,14 @@ function IoCManagement({ iocs, fetchIoCs, loading }) {
                         </select>
                       </td>
                       <td>
-                        <input
-                          type="text"
+                        <select
                           value={editedIoC.criticidad}
                           onChange={(e) => handleEditChange(e, "criticidad")}
-                        />
+                        >
+                          {criticidadOpciones.map((opcion) => (
+                            <option key={opcion} value={opcion}>{opcion}</option>
+                          ))}
+                        </select>
                       </td>
                       <td>{ioc.usuario_registro}</td>
                       <td>
@@ -509,7 +524,11 @@ function IoCManagement({ iocs, fetchIoCs, loading }) {
                     <>
                       <td>{ioc.tipo}</td>
                       <td>{ioc.valor}</td>
-                      <td>{ioc.cliente}</td>
+                      <td>
+                        {enterprise === "Todas" || enterprise === ioc.cliente
+                          ? ioc.cliente
+                          : "Otra empresa"}
+                      </td>
                       <td>{ioc.categoria}</td>
                       <td>{ioc.tecnologia_deteccion}</td>
                       <td>{ioc.pertenece_a_incidente ? (<>Sí 
@@ -541,7 +560,10 @@ function IoCManagement({ iocs, fetchIoCs, loading }) {
                         })}
                       </td>
                       <td>
-                        <button onClick={() => handleEditClick(ioc)}>Editar</button>
+                        {(role === "admin" || role === "analista") && (
+                          <button onClick={() => handleEditClick(ioc)}>Editar</button>
+                        )}
+      
                         {role === "admin" && (
                           <button onClick={() => handleDelete(ioc.id)}>
                             Eliminar

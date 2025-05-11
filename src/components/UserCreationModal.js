@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { api } from "../api"; // Importar la instancia de api
 import "./UserCreationModal.css"; // Importar el CSS
+import { empresasOpciones } from "../constants";
 
 const UserCreationModal = ({ onClose }) => {
-  const [formData, setFormData] = useState({ username: "", password: "", role: "analista" });
+  const [formData, setFormData] = useState({ username: "", password: "", role: "analista", enterprise: "" });
   const [error, setError] = useState("");
 
   // Validar usuario (entre 4 y 20 caracteres, solo letras, números y "_")
@@ -80,6 +81,14 @@ const UserCreationModal = ({ onClose }) => {
               <option value="admin">Administrador</option>
               <option value="analista">Analista</option>
               <option value="lector">Lector</option>
+            </select>
+          </div>
+          <div>
+            <label>Empresa</label>
+            <select name="enterprise" value={formData.enterprise} onChange={handleInputChange} className="modal-input">
+              {empresasOpciones.map((opcion) => (
+                <option key={opcion} value={opcion}>{opcion}</option>
+              ))}
             </select>
           </div>
           <button type="submit" className="modal-button">Crear Usuario</button>

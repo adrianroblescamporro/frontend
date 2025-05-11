@@ -10,7 +10,7 @@ import { clienteOpciones } from "../constants";
     if (token) {
       try {
         const decoded = jwtDecode(token); // Decodifica el JWT
-        return [decoded.sub, decoded.role]; // "sub" es el claim que contiene el username y "role" el que contiene el rol
+        return [decoded.sub, decoded.enterprise]; // "sub" es el claim que contiene el username y "role" el que contiene el rol
       } catch (error) {
         console.error("Error al decodificar el token:", error);
       }
@@ -18,7 +18,7 @@ import { clienteOpciones } from "../constants";
     return [null,null];
   };
 
-const [user]= getUserDataFromToken();
+const [user,enterprise]= getUserDataFromToken();
 
 const IncidentForm = ({ onCreated }) => {
   const [formData, setFormData] = useState({
@@ -98,8 +98,8 @@ const IncidentForm = ({ onCreated }) => {
         <label>Cliente:</label>
         <select name="cliente" value={formData.cliente} onChange={handleChange} required>
         <option value="" disabled>Seleccione...</option>
-        {clienteOpciones.map((opcion) => (
-            <option key={opcion} value={opcion}>{opcion}</option>
+        {(enterprise === "Todas" ? clienteOpciones : [enterprise]).map((opcion) => (
+          <option key={opcion} value={opcion}>{opcion}</option>
         ))}
         </select>
 
