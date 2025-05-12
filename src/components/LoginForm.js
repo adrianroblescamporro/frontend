@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { api } from "../api"; // Importar la instancia de api
 import MFASetup from "./MFAsetup.js";
+import ChangePasswordForm from "./ChangePasswordForm.js";
 import "./LoginForm.css"; // Importar el CSS
 
 const LoginForm = ({ onLogin }) => {
@@ -9,6 +10,8 @@ const LoginForm = ({ onLogin }) => {
   const [error, setError] = useState("");
   const [requiresMFA, setRequiresMFA] = useState(false);
   const [showMFASetup, setShowMFASetup] = useState(false); // Para controlar la configuración de MFA
+  const [mustChangePassword, setMustChangePassword] = useState(false);
+
 
   // Validar usuario (entre 4 y 20 caracteres, solo letras, números y "_")
   const validateUsername = (username) => {
@@ -54,20 +57,38 @@ const LoginForm = ({ onLogin }) => {
       );
 
       localStorage.setItem("token", response.data.access_token);
-      onLogin(); // Notificar al componente padre que el usuario ha iniciado sesión
+      if (response.data.must_change_password) {
+        setMustChangePassword(true);
+      } else {
+        onLogin(); // Notificar al componente padre que el usuario ha iniciado sesión
+      } 
     } catch (err) {
       if (err.response && err.response.status === 403) {
         setShowMFASetup(true); // Si MFA no está configurado, mostrar configuración
-      } else if (err.response && err.response.status === 401) {
+      } else if (err.response && err.response.status === 400) {
         setRequiresMFA(true); // Si MFA está habilitado pero el código es incorrecto, pedir código MFA
+      }else if (err.response.status === 401) {
+        setError("Error de Credenciales");
       } else {
-        setError("Credenciales incorrectas o código MFA inválido");
+        setError("Error");
       }
     } finally {
       setIsLoading(false);
     }
   };
 
+  if (mustChangePassword) {
+    return (
+      <ChangePasswordForm
+        username={formData.username}
+        token={localStorage.getItem("token")}
+        onPasswordChanged={() => {
+          setMustChangePassword(false);
+          onLogin(); // continuar al sistema después del cambio
+        }}
+      />
+    );
+  }
   return (
     <div className="login-container">
       {showMFASetup ? (
