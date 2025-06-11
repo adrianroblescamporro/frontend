@@ -92,7 +92,7 @@ const LoginForm = ({ onLogin }) => {
   return (
     <div className="login-container">
       {showMFASetup ? (
-        <MFASetup username={formData.username} onMFAConfigured={() => setShowMFASetup(false)} />
+        <MFASetup username={formData.username} onMFAConfigured={() => {setShowMFASetup(false); onLogin();}} />
       ) : (
         <form onSubmit={handleSubmit} className={`login-form ${isLoading ? "loading" : ""}`}>
           <h2>Iniciar sesión</h2>
