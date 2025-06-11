@@ -524,11 +524,7 @@ function IoCManagement({ iocs, fetchIoCs, loading }) {
                     <>
                       <td>{ioc.tipo}</td>
                       <td>{ioc.valor}</td>
-                      <td>
-                        {enterprise === "Todas" || enterprise === ioc.cliente
-                          ? ioc.cliente
-                          : "Otra empresa"}
-                      </td>
+                      <td>{ioc.cliente}</td>
                       <td>{ioc.categoria}</td>
                       <td>{ioc.tecnologia_deteccion}</td>
                       <td>{ioc.pertenece_a_incidente ? (<>Sí 

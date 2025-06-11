@@ -4,7 +4,6 @@ import ReactPaginate from "react-paginate";
 import IncidentModal from "./IncidentModal";
 import IncidentEdit from "./IncidentEdit";
 import IoCDetailModal from "./IoCDetailModal";
-import { jwtDecode } from "jwt-decode";
 
 const IncidentList = ({ incidentes, loading, fetchIncidentes }) => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -17,25 +16,10 @@ const IncidentList = ({ incidentes, loading, fetchIncidentes }) => {
   const [editId, setEditId] = useState(null);
   const [selectedIoC, setSelectedIoC] = useState(null);
 
-  const token = localStorage.getItem("token")
   if (loading) {
     return <div>Cargando...</div>;
   }
 
-  // Función para obtener el usuario del token
-    const getUserDataFromToken = () => {
-      if (token) {
-        try {
-          const decoded = jwtDecode(token); // Decodifica el JWT
-          return [decoded.enterprise]; // "sub" es el claim que contiene el username y "role" el que contiene el rol
-        } catch (error) {
-          console.error("Error al decodificar el token:", error);
-        }
-      }
-      return [null];
-    };
-  
-    const [enterprise] = getUserDataFromToken();
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
   };
@@ -47,11 +31,7 @@ const IncidentList = ({ incidentes, loading, fetchIncidentes }) => {
         <div key={inc.id} className="incident-card">
           <h3>{inc.nombre}</h3>
           <p>{inc.descripcion}</p>
-          <p>
-            {enterprise === "Todas" || enterprise === inc.cliente
-              ? inc.cliente
-              : "Otra empresa"}
-          </p>
+          <p>{inc.cliente}</p>
           <p>Fecha: {new Date(inc.fecha_incidente).toLocaleString()}</p>
           <strong>IoCs relacionados:</strong>
           <ul>

@@ -11,7 +11,6 @@ const IoCDetailModal = ({ ioc, onClose }) => {
         <ul>
           <li><strong>Tipo:</strong> {ioc.tipo}</li>
           <li><strong>Valor:</strong> {ioc.valor}</li>
-          <li><strong>Cliente:</strong> {ioc.cliente}</li>
           <li><strong>Categoría:</strong> {ioc.categoria}</li>
           <li><strong>Tecnología:</strong> {ioc.tecnologia_deteccion}</li>
           <li><strong>Criticidad:</strong> {ioc.criticidad}</li>
