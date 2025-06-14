@@ -5,7 +5,7 @@ import IncidentModal from "./IncidentModal";
 import IncidentEdit from "./IncidentEdit";
 import IoCDetailModal from "./IoCDetailModal";
 
-const IncidentList = ({ incidentes, loading, fetchIncidentes }) => {
+const IncidentList = ({ incidentes, loading, fetchIoCs, fetchIncidentes }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 8;
   const offset = currentPage * itemsPerPage;
@@ -48,7 +48,8 @@ const IncidentList = ({ incidentes, loading, fetchIncidentes }) => {
               onClose={() => setEditId(null)}
               onUpdated={() => {
                 setEditId(null);
-                // Aquí puedes llamar a fetchIncidentes si quieres
+                fetchIoCs();
+                fetchIncidentes();
               }}
             />
           )}
@@ -75,6 +76,7 @@ const IncidentList = ({ incidentes, loading, fetchIncidentes }) => {
         <IncidentModal
           onClose={() => setIsIncidentModalOpen(false)}
           onCreated={() => {
+            fetchIoCs();
             fetchIncidentes();
             setIsIncidentModalOpen(false);
           }}

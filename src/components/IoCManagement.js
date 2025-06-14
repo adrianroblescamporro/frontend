@@ -20,7 +20,7 @@ import { jwtDecode } from "jwt-decode";
 
 import "../App.css";
 
-function IoCManagement({ iocs, fetchIoCs, loading }) {
+function IoCManagement({ iocs, fetchIoCs, fetchIncidentes, loading }) {
   const token = localStorage.getItem("token");
 
   // Función para obtener el usuario del token
@@ -155,6 +155,7 @@ function IoCManagement({ iocs, fetchIoCs, loading }) {
       await api.put(`/iocs/${iocId}`, editedIoC);
       setEditingIoCId(null);
       fetchIoCs(); // Recargar datos actualizados
+      fetchIncidentes();
     } catch (error) {
       console.error("Error al actualizar IoC:", error);
     }
@@ -169,9 +170,9 @@ function IoCManagement({ iocs, fetchIoCs, loading }) {
       await api.delete(`/iocs/${iocId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
-      // Elimina el IoC del estado
+      // Elimina el IoC del estado y actualiza incidentes
       fetchIoCs();
+      fetchIncidentes();
     } catch (error) {
       console.error("Error al eliminar el IoC:", error);
       alert("No se pudo eliminar el IoC.");
@@ -578,9 +579,10 @@ function IoCManagement({ iocs, fetchIoCs, loading }) {
                           <AddToIncidentModal
                             iocId={selectedIoCforIncident}
                             onClose={() => setSelectedIoCforIncident(null)}
-                            onSuccess={() => {
+                            onUpdated={() => {
                               setSelectedIoCforIncident(null);
-                              // Si quieres recargar IoCs o refrescar la vista aquí
+                              fetchIoCs();
+                              fetchIncidentes();
                             }}
                           />
                         )}

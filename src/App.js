@@ -114,12 +114,14 @@ function App() {
             iocs={iocs}
             loading={Iocloading}
             fetchIoCs={fetchIoCs}
+            fetchIncidentes={fetchIncidentes}
             />
           )}
           {isIncident && (
             <IncidentManagement
               incidentes={incidentes}
               loading={loading}
+              fetchIoCs={fetchIoCs}
               fetchIncidentes={fetchIncidentes}
             />
           )}
